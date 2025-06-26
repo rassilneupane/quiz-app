@@ -1,89 +1,75 @@
-import React, { useState } from 'react';
-import { Container, Typography, Button, Box } from '@mui/material';
-import QuestionCard from './components/QuestionCard';
-import ResultCard from './components/ResultCard';
-import './App.css';
+import React, { useState } from "react";
+import { Button, Typography, Box } from "@mui/material";
 
 const questions = [
   {
-    question: "What is the capital of France?",
-    options: ["London", "Berlin", "Paris", "Madrid"],
-    answer: "Paris"
+    question: "What is 2 + 2?",
+    options: ["1", "2", "3", "4"],
+    answer: "4",
   },
   {
-    question: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Venus", "Mars", "Jupiter"],
-    answer: "Mars"
+    question: "What color is the sky?",
+    options: ["Blue", "Green", "Red", "Yellow"],
+    answer: "Blue",
   },
   {
-    question: "Who wrote 'Romeo and Juliet'?",
-    options: ["William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"],
-    answer: "William Shakespeare"
+    question: "Which one is a fruit?",
+    options: ["Carrot", "Apple", "Potato", "Onion"],
+    answer: "Apple",
   },
-  {
-    question: "What is the chemical symbol for Water?",
-    options: ["O2", "H2O", "CO2", "NaCl"],
-    answer: "H2O"
-  },
-  {
-    question: "How many continents are there?",
-    options: ["5", "6", "7", "8"],
-    answer: "7"
-  }
 ];
 
-function App() {
+export default function QuizApp() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false);
 
-  const handleSelect = (answer) => {
-    const newAnswers = [...selectedAnswers];
-    newAnswers[currentQuestion] = answer;
-    setSelectedAnswers(newAnswers);
-  };
+  const handleAnswer = (option) => {
+    if (option === questions[currentQuestion].answer) {
+      setScore(score + 1);
+    }
 
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+    const next = currentQuestion + 1;
+    if (next < questions.length) {
+      setCurrentQuestion(next);
     } else {
-      setShowResults(true);
+      setShowScore(true);
     }
   };
 
-  const handleRestart = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswers([]);
-    setShowResults(false);
-  };
+  if (showScore) {
+    return (
+      <Box textAlign="center" mt={5}>
+        <Typography variant="h4">You scored {score} out of {questions.length}</Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Container maxWidth="sm">
-      <Box className="app-box">
-        <Typography variant="h4" className="main-title">Quiz App</Typography>
-        {showResults ? (
-          <ResultCard questions={questions} selectedAnswers={selectedAnswers} onRestart={handleRestart} />
-        ) : (
-          <>
-            <QuestionCard
-              question={questions[currentQuestion].question}
-              options={questions[currentQuestion].options}
-              correctAnswer={questions[currentQuestion].answer}
-              selectedAnswer={selectedAnswers[currentQuestion]}
-              handleSelect={handleSelect}
-            />
-            {selectedAnswers[currentQuestion] && (
-              <Box className="next-button-box">
-                <Button variant="contained" color="primary" onClick={handleNext}>
-                  {currentQuestion === questions.length - 1 ? "Finish" : "Next"}
-                </Button>
-              </Box>
-            )}
-          </>
-        )}
-      </Box>
-    </Container>
+    <Box
+      maxWidth={400}
+      margin="auto"
+      mt={5}
+      textAlign="center"
+      padding={2}
+      border="1px solid lightgray"
+      borderRadius={2}
+    >
+      <Typography variant="h5" mb={2}>
+        {questions[currentQuestion].question}
+      </Typography>
+      {questions[currentQuestion].options.map((option) => (
+        <Button
+          key={option}
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ mb: 1 }}
+          onClick={() => handleAnswer(option)}
+        >
+          {option}
+        </Button>
+      ))}
+    </Box>
   );
 }
-
-export default App;
