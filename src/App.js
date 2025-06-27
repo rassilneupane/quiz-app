@@ -37,10 +37,25 @@ export default function QuizApp() {
     }
   };
 
+  const handleRestart = () => {
+    setScore(0);
+    setCurrentQuestion(0);
+    setShowScore(false);
+  };
+
   if (showScore) {
     return (
       <Box textAlign="center" mt={5}>
-        <Typography variant="h4">You scored {score} out of {questions.length}</Typography>
+        <Typography variant="h4" mb={2}>
+          You scored {score} out of {questions.length}
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleRestart}
+        >
+          Restart Quiz
+        </Button>
       </Box>
     );
   }
